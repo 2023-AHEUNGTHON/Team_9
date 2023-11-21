@@ -32,6 +32,8 @@ dependencies {
 	// swagger 의존성 추가
 	implementation 'io.springfox:springfox-boot-starter:3.0.0'
 	implementation 'io.springfox:springfox-swagger-ui:3.0.0'
+	//aws s3 bucket
+	implementation 'io.awspring.cloud:spring-cloud-starter-aws:2.4.4'
 }
 
 tasks.named('bootBuildImage') {
