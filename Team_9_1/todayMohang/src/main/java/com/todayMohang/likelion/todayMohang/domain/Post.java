@@ -44,6 +44,14 @@ public class Post {
     @OneToMany(mappedBy = "post")
     private List<Image> imageList;
 
+    public void update(PostRequestDto postRequestDto) {
+        this.title = postRequestDto.getTitle();
+        this.organizer = postRequestDto.getOrganizer();
+        this.date = postRequestDto.getDate();
+        this.category = Category.valueOf(postRequestDto.getCategory());
+        this.content = postRequestDto.getContent();
+    }
+
     public Post(PostRequestDto postRequestDto, User user) {
         this.title = postRequestDto.getTitle();
         this.organizer = postRequestDto.getOrganizer();

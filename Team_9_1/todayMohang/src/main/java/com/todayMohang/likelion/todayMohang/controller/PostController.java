@@ -11,10 +11,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
@@ -77,6 +74,35 @@ public class PostController {
                 List<Post> postList = postService.findByUser(userOptional.get());
                 List<UserPostResponseDto> responseDtoList = postList.stream().map(UserPostResponseDto::new).collect(Collectors.toList());
                 return ResponseEntity.ok().body(responseDtoList);
+            }
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @Operation(summary = "", description = "")
+    @PutMapping("/post/update/{postId}")
+    public ResponseEntity<?> updatePost(@PathVariable("postId") Long postId,
+                                        @RequestPart(value = "data") PostRequestDto postRequestDto,
+                                        @RequestPart(value = "file", required = false) List<MultipartFile> files,
+                                        HttpServletRequest request) {
+        try {
+            //임시
+            Optional<User> userOptional = userRepository.findByEmail("nimpia1009@naver.com");
+            if(userOptional.isPresent()) {
+                Optional<Post> postOptional = postService.findById(postId);
+                if(postOptional.isPresent()) {
+                    Post post = postOptional.get();
+                    if(post.getUser().equals(userOptional.get())) {
+                        post.update(postRequestDto);
+                        postService.update(post, files);
+                        return new ResponseEntity<>(HttpStatus.OK);
+                    }
+                    return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+                }
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         } catch (Exception e) {

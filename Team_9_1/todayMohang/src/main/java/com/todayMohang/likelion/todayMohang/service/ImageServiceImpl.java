@@ -52,6 +52,17 @@ public class ImageServiceImpl {
         return null;
     }
 
+    public void deleteAll(List<Image> imageList) {
+        try {
+            for(Image image : imageList) {
+                imageRepository.delete(image);
+                delete(image);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     private String upload(MultipartFile file) {
         try {
             File uploadFile = convert(file)
@@ -65,6 +76,20 @@ public class ImageServiceImpl {
             e.printStackTrace();
         }
         return null;
+    }
+
+    private void delete(Image image) {
+        try {
+            String filename = getNameFromUrl(image.getUrl());
+            if(amazonS3Client.doesObjectExist(bucket, filename)) {
+                amazonS3Client.deleteObject(bucket, filename);
+                System.out.println("deleted file: " + filename);
+            } else {
+                System.out.println("file not found: " + filename);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private String putS3(File uploadFile, String fileName) {
@@ -116,5 +141,11 @@ public class ImageServiceImpl {
     private String extractExt(String originalFilename) {
         int pos = originalFilename.lastIndexOf(".");
         return originalFilename.substring(pos + 1);
+    }
+
+    private String getNameFromUrl(String url) {
+        //https://todaymohang-bucket.s3.ap-northeast-2.amazonaws.com/images/da44e86f-276a-4278-b75c-07ce131a11e31ed7dbfb-57fd-4f1e-8383-9c8efc200cf9.png
+        int start = url.indexOf("images/");
+        return url.substring(start);
     }
 }

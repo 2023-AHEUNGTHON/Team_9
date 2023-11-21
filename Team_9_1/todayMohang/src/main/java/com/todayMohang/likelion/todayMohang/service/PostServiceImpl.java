@@ -9,7 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class PostServiceImpl implements PostService {
@@ -56,9 +58,25 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public void update(Post post) {
+    public Optional<Post> findById(Long id) {
         try {
+            return postRepository.findById(id);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return Optional.empty();
+    }
 
+    @Override
+    public void update(Post post, List<MultipartFile> files) {
+        try {
+            imageService.deleteAll(post.getImageList());
+            post.setImageList(new ArrayList<>());
+            if(files != null) {
+                List<Image> imageList = imageService.uploadAll(files, post);
+                post.setImageList(imageList);
+            }
+            postRepository.save(post);
         } catch (Exception e) {
             e.printStackTrace();
         }
