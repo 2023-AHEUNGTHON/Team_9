@@ -3,6 +3,7 @@ package com.todayMohang.likelion.todayMohang.domain;
 import com.todayMohang.likelion.todayMohang.dto.PostRequestDto;
 import com.todayMohang.likelion.todayMohang.type.Category;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
@@ -14,6 +15,7 @@ import java.util.List;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
+@Getter
 @Table(name = "Post")
 public class Post {
 

@@ -38,22 +38,20 @@ public class PostServiceImpl implements PostService {
     @Override
     public List<Post> findByUser(User user) {
         try {
-
+            return postRepository.findByUser(user);
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         return null;
     }
 
     @Override
     public List<Post> findAll() {
         try {
-
+            return postRepository.findAll();
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         return null;
     }
 
