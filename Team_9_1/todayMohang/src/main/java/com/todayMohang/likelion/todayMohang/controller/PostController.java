@@ -111,4 +111,30 @@ public class PostController {
         return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
+    @Operation(summary = "", description = "")
+    @DeleteMapping("/post/delete/{postId}")
+    public ResponseEntity<?> deletePost(@PathVariable("postId") Long postId,
+                                        HttpServletRequest request) {
+        try {
+            //임시
+            Optional<User> userOptional = userRepository.findByEmail("nimpia1009@naver.com");
+            if(userOptional.isPresent()) {
+                Optional<Post> postOptional = postService.findById(postId);
+                if(postOptional.isPresent()) {
+                    Post post = postOptional.get();
+                    if(post.getUser().equals(userOptional.get())) {
+                        postService.delete(post);
+                        return new ResponseEntity<>(HttpStatus.OK);
+                    }
+                    return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+                }
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
 }

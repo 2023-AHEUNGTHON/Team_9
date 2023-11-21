@@ -85,7 +85,8 @@ public class PostServiceImpl implements PostService {
     @Override
     public void delete(Post post) {
         try {
-
+            imageService.deleteAll(post.getImageList());
+            postRepository.delete(post);
         } catch (Exception e) {
             e.printStackTrace();
         }
