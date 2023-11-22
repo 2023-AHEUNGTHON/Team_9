@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -136,5 +138,26 @@ public class PostController {
         }
         return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
+    //상세조회
+    @GetMapping("/post/{postId}")
+    public PostResponseDto detail(@PathVariable("postId") Long postId){
+        Post post = postService.findById(postId).orElseThrow();
+        return new PostResponseDto(post);
+    }
+
+    //날짜별 상세조회
+    @GetMapping("/post/date/{date}")
+    public List<PostResponseDto> detailDate(@PathVariable("date")Date date){
+        List<Post> posts = postService.findByDate(date);
+        List<PostResponseDto> postResponseDtos = new ArrayList<>();
+        for(Post post : posts){
+            PostResponseDto postResponseDto = new PostResponseDto(post);
+            postResponseDtos.add(postResponseDto);
+        }
+        return postResponseDtos;
+    }
+
+
 
 }

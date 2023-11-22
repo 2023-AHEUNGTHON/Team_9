@@ -5,6 +5,7 @@ import com.todayMohang.likelion.todayMohang.domain.User;
 import com.todayMohang.likelion.todayMohang.dto.PostRequestDto;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,4 +23,5 @@ public interface PostService {
 
     void delete(Post post);
 
+    List<Post> findByDate(Date date);
 }

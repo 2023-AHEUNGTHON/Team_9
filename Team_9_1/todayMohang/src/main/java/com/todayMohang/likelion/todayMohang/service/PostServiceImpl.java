@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -67,6 +68,7 @@ public class PostServiceImpl implements PostService {
         return Optional.empty();
     }
 
+
     @Override
     public void update(Post post, List<MultipartFile> files) {
         try {
@@ -90,5 +92,15 @@ public class PostServiceImpl implements PostService {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public List<Post> findByDate(Date date) {
+        try {
+            return postRepository.findAllByDate(date);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

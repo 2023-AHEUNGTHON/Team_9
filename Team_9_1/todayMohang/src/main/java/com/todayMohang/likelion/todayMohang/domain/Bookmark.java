@@ -3,6 +3,7 @@ package com.todayMohang.likelion.todayMohang.domain;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
+
 import javax.persistence.*;
 
 @Entity
