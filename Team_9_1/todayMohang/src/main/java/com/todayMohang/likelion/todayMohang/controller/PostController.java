@@ -7,10 +7,12 @@ import com.todayMohang.likelion.todayMohang.dto.PostResponseDto;
 import com.todayMohang.likelion.todayMohang.dto.UserPostResponseDto;
 import com.todayMohang.likelion.todayMohang.repository.UserRepository;
 import com.todayMohang.likelion.todayMohang.service.PostServiceImpl;
+import com.todayMohang.likelion.todayMohang.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -27,18 +29,17 @@ public class PostController {
     @Autowired
     PostServiceImpl postService;
 
-    //임시용
     @Autowired
-    UserRepository userRepository;
+    UserService userService;
 
     @Operation(summary = "", description = "")
     @PostMapping("/post/create")
     public ResponseEntity<?> createPost(@RequestPart(value = "data") PostRequestDto postRequestDto,
-                                        @RequestPart(value = "file", required = false)List<MultipartFile> files,
-                                        HttpServletRequest request) {
+                                        @RequestPart(value = "file", required = false) List<MultipartFile> files,
+                                        Authentication authentication) {
         try {
-            //임시
-            Optional<User> userOptional = userRepository.findByEmail("nimpia1009@naver.com");
+            String email = authentication.getName();
+            Optional<User> userOptional = userService.findByEmail(email);
             if(userOptional.isPresent()) {
                 postService.save(postRequestDto, files, userOptional.get());
                 return new ResponseEntity<>(HttpStatus.OK);
@@ -52,14 +53,19 @@ public class PostController {
 
     @Operation(summary = "", description = "")
     @GetMapping("/posts")
-    public ResponseEntity<List<PostResponseDto>> getPosts(HttpServletRequest request){
+    public ResponseEntity<List<PostResponseDto>> getPosts(Authentication authentication){
         try {
-            //임시
-            User user = userRepository.findByEmail("nimpia1009@naver.com").get();
-            List<Post> postList = postService.findAll();
-            /**북마크 리스트 가져오기 -> 게시글 리스트랑 비교(postList.contains())해서 북마크인 애들은 dto에서 bookmark = true로 되게 하기*/
-            List<PostResponseDto> postResponseDtoList = postList.stream().map(PostResponseDto::new).collect(Collectors.toList());
-            return ResponseEntity.ok().body(postResponseDtoList);
+            String email = authentication.getName();
+            Optional<User> userOptional = userService.findByEmail(email);
+            if(userOptional.isPresent()) {
+                User user = userOptional.get();
+                List<Post> postList = postService.findAll();
+                /**북마크 리스트 가져오기 -> 게시글 리스트랑 비교(postList.contains())해서 북마크인 애들은 dto에서 bookmark = true로 되게 하기*/
+                List<PostResponseDto> postResponseDtoList = postList.stream().map(PostResponseDto::new).collect(Collectors.toList());
+                return ResponseEntity.ok().body(postResponseDtoList);
+            } else {
+
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -68,10 +74,10 @@ public class PostController {
 
     @Operation(summary = "", description = "")
     @GetMapping("/mypage/events")
-    public ResponseEntity<List<UserPostResponseDto>> getPostsByUser(HttpServletRequest request){
+    public ResponseEntity<List<UserPostResponseDto>> getPostsByUser(Authentication authentication){
         try {
-            //임시
-            Optional<User> userOptional = userRepository.findByEmail("nimpia1009@naver.com");
+            String email = authentication.getName();
+            Optional<User> userOptional = userService.findByEmail(email);
             if(userOptional.isPresent()) {
                 List<Post> postList = postService.findByUser(userOptional.get());
                 List<UserPostResponseDto> responseDtoList = postList.stream().map(UserPostResponseDto::new).collect(Collectors.toList());
@@ -89,10 +95,10 @@ public class PostController {
     public ResponseEntity<?> updatePost(@PathVariable("postId") Long postId,
                                         @RequestPart(value = "data") PostRequestDto postRequestDto,
                                         @RequestPart(value = "file", required = false) List<MultipartFile> files,
-                                        HttpServletRequest request) {
+                                        Authentication authentication) {
         try {
-            //임시
-            Optional<User> userOptional = userRepository.findByEmail("nimpia1009@naver.com");
+            String email = authentication.getName();
+            Optional<User> userOptional = userService.findByEmail(email);
             if(userOptional.isPresent()) {
                 Optional<Post> postOptional = postService.findById(postId);
                 if(postOptional.isPresent()) {
@@ -116,10 +122,10 @@ public class PostController {
     @Operation(summary = "", description = "")
     @DeleteMapping("/post/delete/{postId}")
     public ResponseEntity<?> deletePost(@PathVariable("postId") Long postId,
-                                        HttpServletRequest request) {
+                                        Authentication authentication) {
         try {
-            //임시
-            Optional<User> userOptional = userRepository.findByEmail("nimpia1009@naver.com");
+            String email = authentication.getName();
+            Optional<User> userOptional = userService.findByEmail(email);
             if(userOptional.isPresent()) {
                 Optional<Post> postOptional = postService.findById(postId);
                 if(postOptional.isPresent()) {

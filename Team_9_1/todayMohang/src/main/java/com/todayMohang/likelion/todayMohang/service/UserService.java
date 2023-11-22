@@ -61,4 +61,13 @@ public class UserService {
         }
     }
 
+    public Optional<User> findByEmail(String email) {
+        try {
+            return userRepository.findByEmail(email);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return Optional.empty();
+    }
+
 }
