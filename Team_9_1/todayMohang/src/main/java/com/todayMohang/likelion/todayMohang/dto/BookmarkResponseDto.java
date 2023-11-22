@@ -1,4 +1,4 @@
-package com.todayMohang.likelion.todayMohang.Dto;
+package com.todayMohang.likelion.todayMohang.dto;
 
 import lombok.Data;
 
