@@ -34,7 +34,7 @@ public class SecurityConfig {
                 .csrf().disable() // 모든 요청에 대해 접근 허용
                 .authorizeRequests() // url 접근 권한 설정
                 .antMatchers("/user/**", "/swagger-ui/**","/webjars/**",
-                        "/v2/api-docs","/swagger-resources/**").permitAll() // user 관련 url 모두 허용
+                        "/v2/api-docs","/swagger-resources/**", "/posts", "/post/**").permitAll() // user 관련 url 모두 허용
                 .anyRequest().authenticated() // 그 외 요청은 인증 필요
                 .and()
                 // 인증이 필요한 url(요청)은 JWT필터를 통과해야 함
