@@ -2,10 +2,7 @@ package com.todayMohang.likelion.todayMohang.domain;
 
 import com.todayMohang.likelion.todayMohang.dto.UserSignUpDto;
 import com.todayMohang.likelion.todayMohang.type.Category;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.List;
@@ -28,6 +25,7 @@ public class User {
 
     private String nickname;
 
+    @Getter
     private boolean authenticated;
 
     @Enumerated(EnumType.STRING)

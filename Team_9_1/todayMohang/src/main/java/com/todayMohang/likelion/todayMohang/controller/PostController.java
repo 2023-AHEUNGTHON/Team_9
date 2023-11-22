@@ -5,7 +5,6 @@ import com.todayMohang.likelion.todayMohang.domain.User;
 import com.todayMohang.likelion.todayMohang.dto.PostRequestDto;
 import com.todayMohang.likelion.todayMohang.dto.PostResponseDto;
 import com.todayMohang.likelion.todayMohang.dto.UserPostResponseDto;
-import com.todayMohang.likelion.todayMohang.repository.UserRepository;
 import com.todayMohang.likelion.todayMohang.service.PostServiceImpl;
 import com.todayMohang.likelion.todayMohang.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -16,7 +15,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -41,8 +39,12 @@ public class PostController {
             String email = authentication.getName();
             Optional<User> userOptional = userService.findByEmail(email);
             if(userOptional.isPresent()) {
-                postService.save(postRequestDto, files, userOptional.get());
-                return new ResponseEntity<>(HttpStatus.OK);
+                User user = userOptional.get();
+                if(user.isAuthenticated()) {
+                    postService.save(postRequestDto, files, user);
+                    return new ResponseEntity<>(HttpStatus.OK);
+                }
+                return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
             }
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         } catch (Exception e) {
