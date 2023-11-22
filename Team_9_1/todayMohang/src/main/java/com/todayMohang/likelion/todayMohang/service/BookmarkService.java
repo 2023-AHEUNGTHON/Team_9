@@ -1,7 +1,6 @@
 package com.todayMohang.likelion.todayMohang.service;
 
-import com.todayMohang.likelion.todayMohang.Dto.BookmarkRequestDto;
-import com.todayMohang.likelion.todayMohang.Dto.BookmarkResponseDto;
+import com.todayMohang.likelion.todayMohang.dto.BookmarkRequestDto;
 import com.todayMohang.likelion.todayMohang.domain.Bookmark;
 import com.todayMohang.likelion.todayMohang.domain.Post;
 import com.todayMohang.likelion.todayMohang.domain.User;
@@ -10,9 +9,6 @@ import com.todayMohang.likelion.todayMohang.repository.PostRepository;
 import com.todayMohang.likelion.todayMohang.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
