@@ -19,6 +19,7 @@ configurations {
 
 repositories {
 	mavenCentral()
+	maven {url 'https://jitpack.io'}
 }
 
 dependencies {
@@ -29,11 +30,17 @@ dependencies {
 	runtimeOnly 'com.mysql:mysql-connector-j'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	// Spring Security
+	implementation 'org.springframework.boot:spring-boot-starter-security'
 	// swagger 의존성 추가
 	implementation 'io.springfox:springfox-boot-starter:3.0.0'
 	implementation 'io.springfox:springfox-swagger-ui:3.0.0'
 	//aws s3 bucket
 	implementation 'io.awspring.cloud:spring-cloud-starter-aws:2.4.4'
+	// JWT Token
+	implementation 'io.jsonwebtoken:jjwt:0.9.1'
+	// 대학 인증 api
+	implementation 'com.github.in-seo:univcert:master-SNAPSHOT'
 }
 
 tasks.named('bootBuildImage') {
