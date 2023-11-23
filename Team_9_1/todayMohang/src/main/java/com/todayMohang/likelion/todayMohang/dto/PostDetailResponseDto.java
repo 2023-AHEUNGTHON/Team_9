@@ -1,12 +1,15 @@
 package com.todayMohang.likelion.todayMohang.dto;
 
+import com.todayMohang.likelion.todayMohang.domain.Image;
 import com.todayMohang.likelion.todayMohang.domain.Post;
 import com.todayMohang.likelion.todayMohang.type.Category;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
+@Getter
 public class PostDetailResponseDto {
 
     private Long id;
@@ -22,9 +25,10 @@ public class PostDetailResponseDto {
     private Category category;
 
     private String content;
+
     private boolean bookmark; // 즐겨찾기 했는지 여부
 
-    private String imageUrl;
+    private List<String> imageUrls;
 
     public PostDetailResponseDto(Post post) {
         this.id = post.getId();
@@ -35,10 +39,9 @@ public class PostDetailResponseDto {
         this.category = post.getCategory();
         this.content = post.getContent();
         this.bookmark = false; // 수정하기
-        if(post.getImageList().size() > 0) {
-            this.imageUrl = post.getImageList().get(0).getUrl();
-        } else {
-            this.imageUrl = null;
+        this.imageUrls = new ArrayList<>();
+        for(Image image : post.getImageList()) {
+            imageUrls.add(image.getUrl());
         }
     }
 
