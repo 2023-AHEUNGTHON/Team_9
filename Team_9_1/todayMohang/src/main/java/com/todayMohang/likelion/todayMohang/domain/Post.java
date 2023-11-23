@@ -2,14 +2,15 @@ package com.todayMohang.likelion.todayMohang.domain;
 
 import com.todayMohang.likelion.todayMohang.dto.PostRequestDto;
 import com.todayMohang.likelion.todayMohang.type.Category;
+import com.todayMohang.likelion.todayMohang.utils.DateUtil;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -27,7 +28,9 @@ public class Post {
 
     private String organizer;
 
-    private Date date;
+    private LocalDateTime start;
+
+    private LocalDateTime end;
 
     @Enumerated(EnumType.STRING)
     private Category category;
@@ -47,7 +50,8 @@ public class Post {
     public void update(PostRequestDto postRequestDto) {
         this.title = postRequestDto.getTitle();
         this.organizer = postRequestDto.getOrganizer();
-        this.date = postRequestDto.getDate();
+        this.start = DateUtil.parse(postRequestDto.getStart());
+        this.end = DateUtil.parse(postRequestDto.getEnd());
         this.category = Category.valueOf(postRequestDto.getCategory());
         this.content = postRequestDto.getContent();
     }
@@ -55,7 +59,8 @@ public class Post {
     public Post(PostRequestDto postRequestDto, User user) {
         this.title = postRequestDto.getTitle();
         this.organizer = postRequestDto.getOrganizer();
-        this.date = postRequestDto.getDate();
+        this.start = DateUtil.parse(postRequestDto.getStart());
+        this.end = DateUtil.parse(postRequestDto.getEnd());
         this.category = Category.valueOf(postRequestDto.getCategory());
         this.content = postRequestDto.getContent();
         this.count = 0L;

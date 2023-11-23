@@ -5,7 +5,7 @@ import com.todayMohang.likelion.todayMohang.type.Category;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @NoArgsConstructor
 @Getter
@@ -17,7 +17,9 @@ public class PostResponseDto {
 
     private String organizer;
 
-    private Date date;
+    private LocalDateTime start;
+
+    private LocalDateTime end;
 
     private Category category;
 
@@ -29,7 +31,8 @@ public class PostResponseDto {
         this.id = post.getId();
         this.title = post.getTitle();
         this.organizer = post.getOrganizer();
-        this.date = post.getDate();
+        this.start = post.getStart();
+        this.end = post.getEnd();
         this.category = post.getCategory();
         this.bookmark = false; // 수정하기
         if(post.getImageList().size() > 0) {

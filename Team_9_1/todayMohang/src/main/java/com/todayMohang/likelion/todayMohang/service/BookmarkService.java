@@ -40,7 +40,8 @@ public class BookmarkService {
             BookmarkResponseDto bookmarkResponseDto = new BookmarkResponseDto(
                     bookmark.getPost().getTitle(),
                     bookmark.getPost().getContent(),
-                    bookmark.getPost().getDate(),
+                    bookmark.getPost().getStart(),
+                    bookmark.getPost().getEnd(),
                     bookmark.getPost().getOrganizer()
             );
             bookmarkResponseDtos.add(bookmarkResponseDto);

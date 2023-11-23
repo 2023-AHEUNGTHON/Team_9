@@ -4,7 +4,7 @@ import com.todayMohang.likelion.todayMohang.type.Category;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Data
 @RequiredArgsConstructor
@@ -17,14 +17,16 @@ public class BookmarkResponseDto {
     private String title;
     private String organizer;
     private String content;
-    private Date date;
+    private LocalDateTime start;
+    private LocalDateTime end;
     private String category;
 
     //생성자
-    public BookmarkResponseDto(String title, String organizer, Date date,String content){
+    public BookmarkResponseDto(String title, String organizer, LocalDateTime start, LocalDateTime end, String content){
         this.title = title;
         this.organizer = organizer;
-        this.date = date;
+        this.start = start;
+        this.end = end;
         this.category = category;
         this.content = content;
     }

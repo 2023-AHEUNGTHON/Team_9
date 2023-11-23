@@ -7,6 +7,7 @@ import com.todayMohang.likelion.todayMohang.dto.PostResponseDto;
 import com.todayMohang.likelion.todayMohang.dto.UserPostResponseDto;
 import com.todayMohang.likelion.todayMohang.service.PostServiceImpl;
 import com.todayMohang.likelion.todayMohang.service.UserService;
+import com.todayMohang.likelion.todayMohang.utils.DateUtil;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
@@ -17,8 +18,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -190,16 +192,24 @@ public class PostController {
 
     //날짜별 상세조회
     @GetMapping("/post/date/{date}")
-    public List<PostResponseDto> detailDate(@PathVariable("date")Date date){
-        List<Post> posts = postService.findByDate(date);
-        List<PostResponseDto> postResponseDtos = new ArrayList<>();
-        for(Post post : posts){
-            PostResponseDto postResponseDto = new PostResponseDto(post);
-            postResponseDtos.add(postResponseDto);
+    public ResponseEntity<List<PostResponseDto>> detailDate(@PathVariable("date") String dateStr){
+        try {
+            LocalDateTime date = DateUtil.parse(dateStr);
+
+            List<Post> posts = postService.findByDate(date);
+            List<PostResponseDto> postResponseDtos = new ArrayList<>();
+            for(Post post : posts){
+                PostResponseDto postResponseDto = new PostResponseDto(post);
+                postResponseDtos.add(postResponseDto);
+            }
+            return ResponseEntity.ok(postResponseDtos);
+        } catch (DateTimeParseException e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        return postResponseDtos;
+        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
-
-
 
 }
