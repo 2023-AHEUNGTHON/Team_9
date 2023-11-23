@@ -30,8 +30,7 @@ public class ImageServiceImpl {
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
 
-    private final String fileDir = System.getProperty("user.dir") + "/src/main/resources/files/"; // 로컬 환경 파일 경로
-    //private final String fileDir = "/home/"; // 배포 환경 파일 경로
+    private final String fileDir = System.getProperty("user.dir") + "/files/";
 
     public List<Image> uploadAll(List<MultipartFile> files, Post post) {
         try {

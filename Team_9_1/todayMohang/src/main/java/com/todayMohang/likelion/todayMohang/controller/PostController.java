@@ -64,7 +64,7 @@ public class PostController {
         return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    @ApiOperation(value = "행사 전체 조회 api", notes = "로그인 상태에서만 토큰 필요, 날짜는 Epoch timestamp")
+    @ApiOperation(value = "행사 전체 조회 api", notes = "로그인 상태에서만 토큰 필요")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),
             @ApiResponse(code = 404, message = "유저 정보 없음"),
@@ -92,7 +92,7 @@ public class PostController {
         return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    @ApiOperation(value = "내 행사 조회 api", notes = "토큰 필요, 날짜는 Epoch timestamp")
+    @ApiOperation(value = "내 행사 조회 api", notes = "토큰 필요")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),
             @ApiResponse(code = 404, message = "유저 정보 없음"),
@@ -144,7 +144,7 @@ public class PostController {
                 }
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } catch (Exception e) {
             e.printStackTrace();
         }
