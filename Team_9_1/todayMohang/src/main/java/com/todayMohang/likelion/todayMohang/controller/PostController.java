@@ -2,6 +2,7 @@ package com.todayMohang.likelion.todayMohang.controller;
 
 import com.todayMohang.likelion.todayMohang.domain.Post;
 import com.todayMohang.likelion.todayMohang.domain.User;
+import com.todayMohang.likelion.todayMohang.dto.PostDetailResponseDto;
 import com.todayMohang.likelion.todayMohang.dto.PostRequestDto;
 import com.todayMohang.likelion.todayMohang.dto.PostResponseDto;
 import com.todayMohang.likelion.todayMohang.dto.UserPostResponseDto;
@@ -185,9 +186,9 @@ public class PostController {
 
     //상세조회
     @GetMapping("/post/{postId}")
-    public PostResponseDto detail(@PathVariable("postId") Long postId){
+    public PostDetailResponseDto detail(@PathVariable("postId") Long postId){
         Post post = postService.findById(postId).orElseThrow();
-        return new PostResponseDto(post);
+        return new PostDetailResponseDto(post);
     }
 
     //날짜별 상세조회

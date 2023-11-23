@@ -5,6 +5,7 @@ import com.todayMohang.likelion.todayMohang.dto.BookmarkRequestDto;
 import com.todayMohang.likelion.todayMohang.dto.BookmarkResponseDto;
 import com.todayMohang.likelion.todayMohang.service.BookmarkService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,8 +20,10 @@ public class BookmarkController {
 
     //즐겨찾기 추가
     @PostMapping("/add")
-    public void addBookmark(@RequestBody BookmarkRequestDto bookmarkRequestDto){
-        bookmarkService.addBookmark(bookmarkRequestDto);
+    public void addBookmark(@RequestBody BookmarkRequestDto bookmarkRequestDto,
+                            Authentication authentication){
+        String email = authentication.getName();
+        bookmarkService.addBookmark(bookmarkRequestDto, email);
     }
 
     //즐겨찾기 조회
