@@ -15,4 +15,9 @@ public class DateUtil {
         return LocalDateTime.of(localDate, LocalTime.MIDNIGHT);
     }
 
+    public static String format(LocalDateTime date) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        return date.format(formatter);
+    }
+
 }

@@ -2,6 +2,7 @@ package com.todayMohang.likelion.todayMohang.dto;
 
 import com.todayMohang.likelion.todayMohang.domain.Post;
 import com.todayMohang.likelion.todayMohang.type.Category;
+import com.todayMohang.likelion.todayMohang.utils.DateUtil;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -17,9 +18,9 @@ public class PostResponseDto {
 
     private String organizer;
 
-    private LocalDateTime start;
+    private String start;
 
-    private LocalDateTime end;
+    private String end;
 
     private Category category;
 
@@ -31,8 +32,8 @@ public class PostResponseDto {
         this.id = post.getId();
         this.title = post.getTitle();
         this.organizer = post.getOrganizer();
-        this.start = post.getStart();
-        this.end = post.getEnd();
+        this.start = DateUtil.format(post.getStart());
+        this.end = DateUtil.format(post.getEnd());
         this.category = post.getCategory();
         this.bookmark = false; // 수정하기
         if(post.getImageList().size() > 0) {
