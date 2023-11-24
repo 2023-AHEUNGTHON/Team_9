@@ -25,4 +25,6 @@ public interface PostService {
     void delete(Post post);
 
     List<Post> findByDate(LocalDateTime date);
+
+    void incrementCount(Long postId);
 }

@@ -24,6 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -79,6 +80,8 @@ public class PostController {
     public ResponseEntity<List<PostResponseDto>> getPosts(Authentication authentication){
         try {
             List<Post> postList = postService.findAll();
+            Comparator<Post> countComparator = Comparator.comparingLong(Post::getCount).reversed();
+            postList.sort(countComparator);
             List<PostResponseDto> postResponseDtoList = postList.stream().map(PostResponseDto::new).collect(Collectors.toList());
             if(authentication == null) {
                 return ResponseEntity.ok().body(postResponseDtoList);
@@ -191,18 +194,33 @@ public class PostController {
 
     //상세조회
     @GetMapping("/post/{postId}")
-    public PostDetailResponseDto detail(@PathVariable("postId") Long postId){
+    public PostDetailResponseDto detail(@PathVariable("postId") Long postId, Authentication authentication){
+        postService.incrementCount(postId);
         Post post = postService.findById(postId).orElseThrow();
-        return new PostDetailResponseDto(post);
+        PostDetailResponseDto detail = new PostDetailResponseDto(post);
+        if(authentication != null) {
+            String email = authentication.getName();
+            Optional<User> userOptional = userService.findByEmail(email);
+            if(userOptional.isPresent()) {
+                List<Bookmark> bookmarks = bookmarkService.getBookmarks(userOptional.get());
+                for(Bookmark bookmark : bookmarks) {
+                    if(bookmark.getPost().equals(post)) {
+                        detail.setBookmark(true);
+                    }
+                }
+            }
+        }
+        return detail;
     }
 
     //날짜별 상세조회
     @GetMapping("/post/date/{date}")
-    public ResponseEntity<List<PostResponseDto>> detailDate(@PathVariable("date") String dateStr,
-                                                            Authentication authentication){
+    public ResponseEntity<List<PostResponseDto>> detailDate(@PathVariable("date") String dateStr, Authentication authentication){
         try {
             LocalDateTime date = DateUtil.parse(dateStr);
             List<Post> posts = postService.findByDate(date);
+            Comparator<Post> countComparator = Comparator.comparingLong(Post::getCount).reversed();
+            posts.sort(countComparator);
             List<PostResponseDto> postResponseDtos = new ArrayList<>();
             if(authentication == null) {
                 postResponseDtos = posts.stream().map(PostResponseDto::new).collect(Collectors.toList());

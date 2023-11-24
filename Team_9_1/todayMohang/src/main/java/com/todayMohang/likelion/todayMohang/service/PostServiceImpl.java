@@ -103,4 +103,12 @@ public class PostServiceImpl implements PostService {
         }
         return null;
     }
+
+    public void incrementCount(Long postId) {
+        try {
+            postRepository.incrementCount(postId);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }
