@@ -1,11 +1,13 @@
 package com.todayMohang.likelion.todayMohang.controller;
 
+import com.todayMohang.likelion.todayMohang.domain.Bookmark;
 import com.todayMohang.likelion.todayMohang.domain.Post;
 import com.todayMohang.likelion.todayMohang.domain.User;
 import com.todayMohang.likelion.todayMohang.dto.PostDetailResponseDto;
 import com.todayMohang.likelion.todayMohang.dto.PostRequestDto;
 import com.todayMohang.likelion.todayMohang.dto.PostResponseDto;
 import com.todayMohang.likelion.todayMohang.dto.UserPostResponseDto;
+import com.todayMohang.likelion.todayMohang.service.BookmarkService;
 import com.todayMohang.likelion.todayMohang.service.PostServiceImpl;
 import com.todayMohang.likelion.todayMohang.service.UserService;
 import com.todayMohang.likelion.todayMohang.utils.DateUtil;
@@ -34,6 +36,9 @@ public class PostController {
 
     @Autowired
     UserService userService;
+
+    @Autowired
+    BookmarkService bookmarkService;
 
     @ApiOperation(value = "행사 생성 api", notes = "토큰 필요")
     @ApiResponses({
@@ -82,7 +87,7 @@ public class PostController {
             Optional<User> userOptional = userService.findByEmail(email);
             if(userOptional.isPresent()) {
                 User user = userOptional.get();
-                /**북마크 리스트 가져오기 -> 게시글 리스트랑 비교(postList.contains())해서 북마크인 애들은 dto에서 bookmark = true로 되게 하기*/
+                postResponseDtoList = checkBookmark(user, postList);
                 return ResponseEntity.ok().body(postResponseDtoList);
             }
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -193,15 +198,20 @@ public class PostController {
 
     //날짜별 상세조회
     @GetMapping("/post/date/{date}")
-    public ResponseEntity<List<PostResponseDto>> detailDate(@PathVariable("date") String dateStr){
+    public ResponseEntity<List<PostResponseDto>> detailDate(@PathVariable("date") String dateStr,
+                                                            Authentication authentication){
         try {
             LocalDateTime date = DateUtil.parse(dateStr);
-
             List<Post> posts = postService.findByDate(date);
             List<PostResponseDto> postResponseDtos = new ArrayList<>();
-            for(Post post : posts){
-                PostResponseDto postResponseDto = new PostResponseDto(post);
-                postResponseDtos.add(postResponseDto);
+            if(authentication == null) {
+                postResponseDtos = posts.stream().map(PostResponseDto::new).collect(Collectors.toList());
+            } else {
+                String email = authentication.getName();
+                Optional<User> userOptional = userService.findByEmail(email);
+                if(userOptional.isPresent()) {
+                    postResponseDtos = checkBookmark(userOptional.get(), posts);
+                }
             }
             return ResponseEntity.ok(postResponseDtos);
         } catch (DateTimeParseException e) {
@@ -211,6 +221,24 @@ public class PostController {
             e.printStackTrace();
         }
         return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    private List<PostResponseDto> checkBookmark(User user, List<Post> posts) {
+        List<Bookmark> bookmarks = bookmarkService.getBookmarks(user);
+        List<Post> bookmarkedPosts = new ArrayList<>();
+        for(Bookmark bookmark : bookmarks) {
+            bookmarkedPosts.add(bookmark.getPost());
+        }
+
+        List<PostResponseDto> postResponseDtoList = new ArrayList<>();
+        for(Post post : posts) {
+            if(bookmarkedPosts.contains(post)) {
+                postResponseDtoList.add(new PostResponseDto(post, true));
+            } else {
+                postResponseDtoList.add(new PostResponseDto(post, false));
+            }
+        }
+        return postResponseDtoList;
     }
 
 }
