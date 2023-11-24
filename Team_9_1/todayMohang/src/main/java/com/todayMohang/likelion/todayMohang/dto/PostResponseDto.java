@@ -6,8 +6,6 @@ import com.todayMohang.likelion.todayMohang.utils.DateUtil;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
-
 @NoArgsConstructor
 @Getter
 public class PostResponseDto {
@@ -36,6 +34,21 @@ public class PostResponseDto {
         this.end = DateUtil.format(post.getEnd());
         this.category = post.getCategory();
         this.bookmark = false; // 수정하기
+        if(post.getImageList().size() > 0) {
+            this.imageUrl = post.getImageList().get(0).getUrl();
+        } else {
+            this.imageUrl = null;
+        }
+    }
+
+    public PostResponseDto(Post post, boolean bookmark) {
+        this.id = post.getId();
+        this.title = post.getTitle();
+        this.organizer = post.getOrganizer();
+        this.start = DateUtil.format(post.getStart());
+        this.end = DateUtil.format(post.getEnd());
+        this.category = post.getCategory();
+        this.bookmark = bookmark;
         if(post.getImageList().size() > 0) {
             this.imageUrl = post.getImageList().get(0).getUrl();
         } else {

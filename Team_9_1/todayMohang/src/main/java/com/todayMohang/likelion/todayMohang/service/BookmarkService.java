@@ -4,18 +4,13 @@ import com.todayMohang.likelion.todayMohang.dto.BookmarkRequestDto;
 import com.todayMohang.likelion.todayMohang.domain.Bookmark;
 import com.todayMohang.likelion.todayMohang.domain.Post;
 import com.todayMohang.likelion.todayMohang.domain.User;
-import com.todayMohang.likelion.todayMohang.dto.BookmarkResponseDto;
-import com.todayMohang.likelion.todayMohang.jwt.JwtUtil;
 import com.todayMohang.likelion.todayMohang.repository.BookmarkRepository;
 import com.todayMohang.likelion.todayMohang.repository.PostRepository;
 import com.todayMohang.likelion.todayMohang.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import javax.swing.text.html.Option;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -32,27 +27,23 @@ public class BookmarkService {
 
     }
 
-    public List<BookmarkResponseDto> getBookmarks(){
-        Long userId = 1L;
+    public List<Bookmark> getBookmarks(User user){
+        return bookmarkRepository.findAllByUser(user);
 
-        List<Bookmark> bookmarks = bookmarkRepository.findAllByUserId(userId);
-        List<BookmarkResponseDto> bookmarkResponseDtos = new ArrayList<>();
-        for(Bookmark bookmark : bookmarks){
-            BookmarkResponseDto bookmarkResponseDto = new BookmarkResponseDto(
-                    bookmark.getPost().getTitle(),
-                    bookmark.getPost().getContent(),
-                    bookmark.getPost().getStart(),
-                    bookmark.getPost().getEnd(),
-                    bookmark.getPost().getOrganizer()
-            );
-            bookmarkResponseDtos.add(bookmarkResponseDto);
-        }
-        return bookmarkResponseDtos;
+//        List<BookmarkResponseDto> bookmarkResponseDtos = new ArrayList<>();
+//        for(Bookmark bookmark : bookmarks){
+//            BookmarkResponseDto bookmarkResponseDto = new BookmarkResponseDto(
+//                    bookmark.getPost().getTitle(),
+//                    bookmark.getPost().getContent(),
+//                    bookmark.getPost().getStart(),
+//                    bookmark.getPost().getEnd(),
+//                    bookmark.getPost().getOrganizer()
+//            );
+//            bookmarkResponseDtos.add(bookmarkResponseDto);
+//        }
+        //return bookmarkResponseDtos;
     }
 
-    public Bookmark findById(Long id) {
-        return bookmarkRepository.findById(id).orElseThrow();
-    }
     public void deleteBookmark(Bookmark bookmark){
         bookmarkRepository.delete(bookmark);
     }
