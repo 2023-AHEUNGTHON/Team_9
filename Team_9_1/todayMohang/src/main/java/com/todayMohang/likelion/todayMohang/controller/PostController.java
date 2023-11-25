@@ -57,7 +57,7 @@ public class PostController {
             Optional<User> userOptional = userService.findByEmail(email);
             if(userOptional.isPresent()) {
                 User user = userOptional.get();
-                if(user.isAuthenticated()) {
+                if(user.getAuthenticated()) {
                     postService.save(postRequestDto, files, user);
                     return new ResponseEntity<>(HttpStatus.OK);
                 }

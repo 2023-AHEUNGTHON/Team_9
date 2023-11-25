@@ -2,6 +2,8 @@ package com.todayMohang.likelion.todayMohang.service;
 
 import com.todayMohang.likelion.todayMohang.domain.User;
 import com.todayMohang.likelion.todayMohang.dto.UserLoginDto;
+import com.todayMohang.likelion.todayMohang.dto.UserPostResponseDto;
+import com.todayMohang.likelion.todayMohang.dto.UserProfileDto;
 import com.todayMohang.likelion.todayMohang.dto.UserSignUpDto;
 import com.todayMohang.likelion.todayMohang.exception.DataNotFoundException;
 import com.todayMohang.likelion.todayMohang.jwt.JwtUtil;
@@ -68,6 +70,21 @@ public class UserService {
             e.printStackTrace();
         }
         return Optional.empty();
+    }
+
+    public UserProfileDto getUserProfile(String email){
+        Optional<User> optUser = userRepository.findByEmail(email);
+
+        if (optUser.isPresent()){
+            User user = optUser.get();
+            String nickname = user.getNickname();
+            boolean auth = user.getAuthenticated();
+
+            UserProfileDto profileDto = new UserProfileDto();
+            profileDto.setNickname(nickname);
+            profileDto.setAuthenticated(auth);
+            return profileDto;
+        }else throw new DataNotFoundException("사용자가 존재하지 않습니다.");
     }
 
 }

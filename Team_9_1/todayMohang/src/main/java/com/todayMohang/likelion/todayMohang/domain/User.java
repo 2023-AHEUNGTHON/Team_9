@@ -11,6 +11,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Setter
+@Getter
 @Builder
 @Table(name = "User")
 public class User {
@@ -25,8 +26,7 @@ public class User {
 
     private String nickname;
 
-    @Getter
-    private boolean authenticated;
+    private Boolean authenticated;
 
     @Enumerated(EnumType.STRING)
     private Category interest;

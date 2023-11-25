@@ -3,6 +3,7 @@ package com.todayMohang.likelion.todayMohang.controller;
 
 import com.todayMohang.likelion.todayMohang.dto.MailDto;
 import com.todayMohang.likelion.todayMohang.dto.UserLoginDto;
+import com.todayMohang.likelion.todayMohang.dto.UserProfileDto;
 import com.todayMohang.likelion.todayMohang.dto.UserSignUpDto;
 import com.todayMohang.likelion.todayMohang.service.UserService;
 import com.univcert.api.UnivCert;
@@ -101,5 +102,23 @@ public class UserController {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
+    }
+
+    @ApiOperation(value = "개인페이지", notes = "닉네임, 인증 여부 반환")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "성공"),
+            @ApiResponse(code = 400, message = "실패")
+    })@GetMapping("/user/myprofile")
+    public ResponseEntity<UserProfileDto> getUserProfile(Authentication authentication){
+
+        try {
+            String email = authentication.getName();
+            UserProfileDto profileDto = userService.getUserProfile(email);
+            return new ResponseEntity<>(profileDto, HttpStatus.OK);
+        }catch (Exception e){
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+
     }
 }
