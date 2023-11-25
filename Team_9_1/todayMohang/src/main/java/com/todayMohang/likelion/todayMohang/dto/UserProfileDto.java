@@ -10,5 +10,5 @@ import lombok.Setter;
 public class UserProfileDto {
 
     private String nickname;
-    private boolean authenticated;
+    private Boolean authenticated;
 }
